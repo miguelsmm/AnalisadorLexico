@@ -1,29 +1,23 @@
-/*
- *  Class Token
- *  
- *  Each token is represented by its type and value. 
- */
-
 public class Token {
-	private String token; // Type of of token
-	private String lexeme; // The lexeme
+	private String token; 
+	private String lexeme; 
 
 	public Token(String token, String lexeme) {
 		this.token = token;
 		this.lexeme = lexeme;
 	}
 
-	// Returns the type of the token
+	// Retorna o tipo do Token
 	public String getTokenType() {
 		return token;
 	}
 
-	// Returns the lexeme of the token
+	// Retorna o Lexema do Token
 	public String getLexeme() {
 		return lexeme;
 	}
 
-	// Returns a string representation of the token
+	// Retorna o token em String
 	public String toString() {
 		return token + "\t" + lexeme;
 	}

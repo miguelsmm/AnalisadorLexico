@@ -1,25 +1,11 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-
-/*
- * Class Lexer
- * 
- * Update the method nextToken() such to the provided
- * specifications of the Decaf Programming Language.
- * 
- * You are not allowed to use any built it in tokenizer
- * in Java. You are only allowed to scan the input file
- * one character at a time.
- */
 
 public class Lexema {
 
 	private BufferedReader reader; // Reader
-	private char curr; // The current character being scanned
+	private char current; // Char atual sendo scaneado
 
 	private static final char EOF = (char) (-1);
 
@@ -27,13 +13,13 @@ public class Lexema {
 
 	public Lexema(String file) {
 		try {
-             	reader = new BufferedReader(new FileReader(file));
+			reader = new BufferedReader(new FileReader(file));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		// Read the first character
-		curr = read();
+		// Lê o primeiro caractere
+		current = read();
 	}
 
 	private char read() {
@@ -45,7 +31,7 @@ public class Lexema {
 		}
 	}
 
-	// Checks if a character is a digit
+	// Verifica se o caractere é um número
 	private boolean isNumeric(char c) {
 		if (c >= '0' && c <= '9')
 			return true;
@@ -53,12 +39,13 @@ public class Lexema {
 		return false;
 	}
 
-	public boolean isAlpha(char c){
-		if(c>='a' && c<='z' )
-		return true;
-		if(c>='A' && c<='Z' )
-		return true;	
-		
+	// verifica se o caractere é uma letra
+	public boolean isAlpha(char c) {
+		if (c >= 'a' && c <= 'z')
+			return true;
+		if (c >= 'A' && c <= 'Z')
+			return true;
+
 		return false;
 
 	}
@@ -68,99 +55,99 @@ public class Lexema {
 		int state = 1; // Initial state
 		int numBuffer = 0; // A buffer for number literals
 		String alphaBuffer = "";
-		int decBuffer=0;
-                boolean skipped = false;
+		int decBuffer = 0;
+		boolean skipped = false;
 		while (true) {
-		if (curr == EOF && !skipped) {
-                        skipped = true;
-                      
-                }else if (skipped) {
-                            
-                            try {
-                            
-                                    reader.close();
+			if (current == EOF && !skipped) {
+				skipped = true;
+
+			} else if (skipped) {
+
+				try {
+
+					reader.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-                                
+
 				return null;
 			}
-				
+
 			switch (state) {
-			// Controller
+			// Controle do código fonte
 			case 1:
-				switch (curr) {
-				case ' ': // Whitespaces
+				switch (current) {
+				case ' ': // Tira os espaços em branco e comentários
 				case '\n':
 				case '\b':
 				case '\f':
 				case '\r':
-				case '\t':	
-					curr = read();
+				case '\t':
+					current = read();
 					continue;
 
 				case ';':
-					curr = read();
+					current = read();
 					return new Token("SM", ";");
 
 				case '+':
-					curr = read();
+					current = read();
 					return new Token("PO", "+");
 
 				case '-':
-					curr = read();
+					current = read();
 					return new Token("MO", "-");
 
 				case '*':
-					curr = read();
+					current = read();
 					return new Token("TO", "*");
 
 				case '/':
-					curr = read();
-                                        state = 14;
-                                        continue;
-					//return new Token("DO", "/");
-				case',':
-					curr=read();	
-					return new Token("FA",",");
-				case'(':
-					curr=read();	
-					return new Token("LP","(");
-				case')':
-					curr=read();	
-					return new Token("RP",")");
-				case'{':
-					curr=read();	
-					return new Token("LB","{");
-				case'}':
-					curr=read();	
-					return new Token("RB","}");
-				case'%':
-					curr=read();	
-					return new Token("MD","%");
-				case'=':
-					curr=read();	
-					state=8;
+					current = read();
+					state = 14;
 					continue;
-					
-				case'!':
-					curr=read();
-					state=9;
+				// return new Token("DO", "/");
+				case ',':
+					current = read();
+					return new Token("FA", ",");
+				case '(':
+					current = read();
+					return new Token("LP", "(");
+				case ')':
+					current = read();
+					return new Token("RP", ")");
+				case '{':
+					current = read();
+					return new Token("LB", "{");
+				case '}':
+					current = read();
+					return new Token("RB", "}");
+				case '%':
+					current = read();
+					return new Token("MD", "%");
+				case '=':
+					current = read();
+					state = 8;
 					continue;
-				case'&':
-					curr=read();
-					state=10;
+
+				case '!':
+					current = read();
+					state = 9;
 					continue;
-				case'|':
-					curr=read();
-					state=11;
-					continue;	 
-                                case '"':
-                                        curr=read();
-                                        state=13;
-                                        alphaBuffer="";
-                                        continue;
-                             
+				case '&':
+					current = read();
+					state = 10;
+					continue;
+				case '|':
+					current = read();
+					state = 11;
+					continue;
+				case '"':
+					current = read();
+					state = 13;
+					alphaBuffer = "";
+					continue;
+
 				default:
 					state = 2; // Check the next possibility
 					continue;
@@ -168,206 +155,187 @@ public class Lexema {
 
 				// Integer - Start
 			case 2:
-				if (isNumeric(curr)) {
+				if (isNumeric(current)) {
 					numBuffer = 0; // Reset the buffer.
-					numBuffer += (curr - '0');
+					numBuffer += (current - '0');
 
 					state = 3;
-                                     
-					curr = read();
-                                       
+
+					current = read();
+
 				} else {
-					state=5; //does not start with number or symbol go to case 5
+					state = 5; // does not start with number or symbol go to
+								// case 5
 				}
 				continue;
 
-				// Integer - Body
+			// Integer - Body
 			case 3:
-				if (isNumeric(curr)) {
+				if (isNumeric(current)) {
 					numBuffer *= 10;
-					numBuffer += (curr - '0');
+					numBuffer += (current - '0');
 
-					curr = read();
-                                        
-				}else if(curr=='.'){
-					
-					curr = read();	
-                                       
-					state=4; //has decimal point go to case 4
-                                        
-                                        } else {
+					current = read();
+
+				} else if (current == '.') {
+
+					current = read();
+
+					state = 4; // has decimal point go to case 4
+
+				} else {
 					return new Token("NUM", "" + numBuffer);
 				}
-                                
+
 				continue;
-				
-				//decimal-start	
+
+			// decimal-start
 			case 4:
-				if (isNumeric(curr)) {
+				if (isNumeric(current)) {
 					decBuffer = 0;
-					decBuffer += (curr - '0');
-					state=7;					
-					curr = read();	
-                                        
-				}else  {
-					return new Token("ERROR", "Invalid input: "+numBuffer+"." );
+					decBuffer += (current - '0');
+					state = 7;
+					current = read();
+
+				} else {
+					return new Token("ERROR", "Invalid input: " + numBuffer + ".");
 				}
 				continue;
-				//decimal body
+			// decimal body
 			case 7:
-				if (isNumeric(curr)) {
+				if (isNumeric(current)) {
 					decBuffer *= 10;
-					decBuffer += (curr - '0');
+					decBuffer += (current - '0');
 
-					curr = read();
+					current = read();
 				} else {
-					return new Token("NM", "" + numBuffer+"."+decBuffer);
+					return new Token("NM", "" + numBuffer + "." + decBuffer);
 				}
-				continue;	
+				continue;
 
-				//identifier -start
+			// identifier -start
 			case 5:
-				if(isAlpha(curr)|| curr=='_'){
-				alphaBuffer = "";					
-				alphaBuffer+=curr;
-				state=6;
-				curr = read();
-				}else {
-                                    alphaBuffer = "";					
-				    alphaBuffer+=curr;
-                                        curr=read();
-					return new Token("ERROR", "Invalid input:"+alphaBuffer);
-				}
-				continue;	
-			
-				//identifier - Body
-			case 6:	
-				if ((isAlpha(curr) || isNumeric(curr) || curr=='_')) {
-					
-					alphaBuffer += curr;
-					curr = read();
-                                       
-                                        
+				if (isAlpha(current) || current == '_') {
+					alphaBuffer = "";
+					alphaBuffer += current;
+					state = 6;
+					current = read();
 				} else {
-                                    
-                                    if( alphaBuffer.equals("class")||
-                                        alphaBuffer.equals("static")||   
-                                        alphaBuffer.equals("else")||
-                                        alphaBuffer.equals("if")||
-                                        alphaBuffer.equals("int")||
-                                        alphaBuffer.equals("float")||
-                                        alphaBuffer.equals("boolean")||
-                                        alphaBuffer.equals("String")||
-                                        alphaBuffer.equals("return")||
-                                        alphaBuffer.equals("while")   
-                                            ){
-                                        return new Token("[reserved_word]", "" + alphaBuffer);
-                                        
-                                    }else if(alphaBuffer.equals("true")||alphaBuffer.equals("false"))
-                                    {
-                                        return new Token("[boolean]", "" + alphaBuffer);
-                                    }
-                                    
-                                    
+					alphaBuffer = "";
+					alphaBuffer += current;
+					current = read();
+					return new Token("ERROR", "Invalid input:" + alphaBuffer);
+				}
+				continue;
+
+			// identifier - Body
+			case 6:
+				if ((isAlpha(current) || isNumeric(current) || current == '_')) {
+
+					alphaBuffer += current;
+					current = read();
+
+				} else {
+
+					if (alphaBuffer.equals("class") || alphaBuffer.equals("static") || alphaBuffer.equals("else")
+							|| alphaBuffer.equals("if") || alphaBuffer.equals("int") || alphaBuffer.equals("float")
+							|| alphaBuffer.equals("boolean") || alphaBuffer.equals("String")
+							|| alphaBuffer.equals("return") || alphaBuffer.equals("while")) {
+						return new Token("[reserved_word]", "" + alphaBuffer);
+
+					} else if (alphaBuffer.equals("true") || alphaBuffer.equals("false")) {
+						return new Token("[boolean]", "" + alphaBuffer);
+					}
+
 					return new Token("[id]", "" + alphaBuffer);
 				}
 				continue;
-				
-				// if ==
-			case 8: 
-				if(curr=='=')	{
-					curr=read();
-					return new Token("EQ","==");
+
+			// if ==
+			case 8:
+				if (current == '=') {
+					current = read();
+					return new Token("EQ", "==");
+				} else {
+
+					return new Token("AO", "=");
 				}
-				else {
-					
-					return new Token("AO","=");		
-				}
-				//if !=
-			case 9: 
-				if(curr=='=')	{
-					curr=read();
-					return new Token("NE","!=");
-				}
-				else {
+				// if !=
+			case 9:
+				if (current == '=') {
+					current = read();
+					return new Token("NE", "!=");
+				} else {
 					return new Token("ERROR", "Invalid input: !");
 				}
 
-			// if &&
-			case 10: 
-				if(curr=='&')	{
-					curr=read();
-					return new Token("LA","&&");
-				}
-				else {
+				// if &&
+			case 10:
+				if (current == '&') {
+					current = read();
+					return new Token("LA", "&&");
+				} else {
 					return new Token("ERROR", "Invalid input: &");
 				}
-			// if || 
-			case 11: 
-				if(curr=='|')	{
-					curr=read();
-					return new Token("LO","||");
-				}
-				else {
+				// if ||
+			case 11:
+				if (current == '|') {
+					current = read();
+					return new Token("LO", "||");
+				} else {
 					return new Token("ERROR", "Invalid input: |");
 				}
-                            
-                        case 13:
-                            if(curr=='"'){
-                                curr=read();
-                                return new Token("ST","\""+alphaBuffer+"\"");
-                            }
-                            else if(curr=='\n' || curr==EOF){
-                                curr=read();
-                                return new Token("ERROR","Invalid string literal"); 
-                            }
-                            else{
-                                alphaBuffer += curr;
-                                curr = read();
-                            }
-                            continue;
-                            //alphaBuffer += curr;
-                            //curr = read();
-                         
-                        case 14:
-                            if(curr=='/'){
-                                 state = 15;
-                                 curr=read();
-                            }else if(curr=='*')
-                            {
-                                state = 16;
-                                curr=read();
-                            }
-                            else{
-                                return new Token("DO", "/");
-                            }
-                            continue;
-                        case 15:
-                             if(curr=='\n'){
-                                 
-                                  state = 1;
-                             }
-                            curr=read();
-                            continue;
-                        case 16:
-                            if(curr=='*')
-                            {
-                                state = 17;
-                               
-                            }
-                             curr=read();
-                            continue;
-                        case 17:
-                            if(curr=='/'){
-                                curr=read();
-                                state = 1;
-                            }
-                            else{
-                                curr=read();
-                                state=16;
-                            }
-                            continue;
-                       
+
+			case 13:
+				if (current == '"') {
+					current = read();
+					return new Token("ST", "\"" + alphaBuffer + "\"");
+				} else if (current == '\n' || current == EOF) {
+					current = read();
+					return new Token("ERROR", "Invalid string literal");
+				} else {
+					alphaBuffer += current;
+					current = read();
+				}
+				continue;
+			// alphaBuffer += curr;
+			// curr = read();
+
+			case 14:
+				if (current == '/') {
+					state = 15;
+					current = read();
+				} else if (current == '*') {
+					state = 16;
+					current = read();
+				} else {
+					return new Token("DO", "/");
+				}
+				continue;
+			case 15:
+				if (current == '\n') {
+
+					state = 1;
+				}
+				current = read();
+				continue;
+			case 16:
+				if (current == '*') {
+					state = 17;
+
+				}
+				current = read();
+				continue;
+			case 17:
+				if (current == '/') {
+					current = read();
+					state = 1;
+				} else {
+					current = read();
+					state = 16;
+				}
+				continue;
+
 			}
 		}
 	}

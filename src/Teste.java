@@ -2,7 +2,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-
 public class Teste {
 	public static void main(String[] args) {
 		String inFile = "src/CodigoFonte.txt";
