@@ -1,200 +1,183 @@
-[reserverd_word]	class
-[id]	Algebra
-LB	{
-[reserverd_word]	static
-[reserverd_word]	boolean
-[id]	isPrime
-LP	(
-[reserverd_word]	int
-[id]	c
-RP	)
-LB	{
-[reserverd_word]	if
-LP	(
-[id]	c
-MD	%
-NUM	2
-EQ	==
-NUM	0
-RP	)
-[reserverd_word]	return
-[boolean]	false
-SM	;
-[reserverd_word]	int
-[id]	d
-SM	;
-[id]	d
-AO	=
-NUM	3
-SM	;
-[reserverd_word]	while
-LP	(
-[id]	d
-NE	!=
-[id]	c
-RP	)
-LB	{
-[reserverd_word]	if
-LP	(
-[id]	c
-MD	%
-[id]	d
-EQ	==
-NUM	0
-RP	)
-[reserverd_word]	return
-[boolean]	false
-SM	;
-[id]	d
-AO	=
-[id]	d
-PO	+
-NUM	2
-SM	;
-RB	}
-[reserverd_word]	String
-[id]	s
-AO	=
-ST	"This is a useless string literal"
-SM	;
-[reserverd_word]	return
-[boolean]	true
-SM	;
-RB	}
-[reserverd_word]	static
-[reserverd_word]	int
-[id]	gcd
-LP	(
-[reserverd_word]	int
-[id]	a
-FA	,
-[reserverd_word]	int
-[id]	b
-RP	)
-LB	{
-[reserverd_word]	String
-[id]	s
-AO	=
-ERROR	Invalid string literal
-[reserverd_word]	int
-[id]	m
-SM	;
-[reserverd_word]	int
-ERROR	Invalid input:?
-NUM	23
-[id]	sd
-SM	;
-[id]	m
-AO	=
-[id]	b
-MD	%
-[id]	a
-SM	;
-[reserverd_word]	if
-LP	(
-[id]	m
-EQ	==
-NUM	0
-RP	)
-[reserverd_word]	return
-[id]	a
-SM	;
-[reserverd_word]	else
-[reserverd_word]	return
-[id]	gcd
-LP	(
-[id]	m
-FA	,
-[id]	a
-RP	)
-SM	;
-RB	}
-[reserverd_word]	static
-[reserverd_word]	int
-[id]	fibonacci
-LP	(
-[reserverd_word]	int
-[id]	n
-RP	)
-LB	{
-[reserverd_word]	if
-LP	(
-LP	(
-[id]	n
-EQ	==
-NUM	1
-RP	)
-LO	||
-LP	(
-[id]	n
-EQ	==
-NUM	2
-RP	)
-RP	)
-[reserverd_word]	return
-NUM	1
-SM	;
-[reserverd_word]	else
-[reserverd_word]	return
-[id]	fibonacci
-LP	(
-[id]	n
-MO	-
-NUM	1
-RP	)
-PO	+
-[id]	fibonacci
-LP	(
-[id]	n
-MO	-
-NUM	2
-RP	)
-SM	;
-RB	}
-[reserverd_word]	static
-[reserverd_word]	float
-[id]	average
-LP	(
-[reserverd_word]	int
-[id]	n1
-FA	,
-[reserverd_word]	int
-[id]	n2
-FA	,
-[reserverd_word]	int
-[id]	n3
-RP	)
-LB	{
-[reserverd_word]	float
-[id]	sum
-AO	=
-[id]	n1
-PO	+
-[id]	n2
-PO	+
-[id]	n3
-SM	;
-[reserverd_word]	return
-[id]	sum
-DO	/
-NM	3.0
-SM	;
-RB	}
-RB	}
-[id]	Even
-[id]	though
-[id]	it
-[id]	is
-[id]	illegal
-[id]	to
-[id]	write
-[id]	anything
-[id]	here
-[id]	the
-[id]	lexical
-[id]	analyzer
-[id]	should
-[id]	work
-[id]	normally
-[id]	without
-[id]	errors
+[ reserved_word, class ]
+[ id, Algebra ]
+[ left_bracket, { ]
+[ reserved_word, static ]
+[ reserved_word, boolean ]
+[ id, isPrime ]
+[ left_parenthesis, ( ]
+[ reserved_word, int ]
+[ id, c ]
+[ right_parenthesis, ) ]
+[ left_bracket, { ]
+[ reserved_word, if ]
+[ left_parenthesis, ( ]
+[ id, c ]
+[ Arith_Op, % ]
+[ num, 2 ]
+[ Equal_Op, == ]
+[ num, 0 ]
+[ right_parenthesis, ) ]
+[ reserved_word, return ]
+[ boolean, false ]
+[ semi_colon, ; ]
+[ reserved_word, int ]
+[ id, d ]
+[ semi_colon, ; ]
+[ id, d ]
+[ Atrib_Op, = ]
+[ num, 3 ]
+[ semi_colon, ; ]
+[ reserved_word, while ]
+[ left_parenthesis, ( ]
+[ id, d ]
+[ Equal_OP, != ]
+[ id, c ]
+[ right_parenthesis, ) ]
+[ left_bracket, { ]
+[ reserved_word, if ]
+[ left_parenthesis, ( ]
+[ id, c ]
+[ Arith_Op, % ]
+[ id, d ]
+[ Equal_Op, == ]
+[ num, 0 ]
+[ right_parenthesis, ) ]
+[ reserved_word, return ]
+[ boolean, false ]
+[ semi_colon, ; ]
+[ id, d ]
+[ Atrib_Op, = ]
+[ id, d ]
+[ Arith_Op, + ]
+[ num, 2 ]
+[ semi_colon, ; ]
+[ right_bracket, } ]
+[ reserved_word, String ]
+[ id, s ]
+[ Atrib_Op, = ]
+[ string_literal, "This is a useless string literal" ]
+[ semi_colon, ; ]
+[ reserved_word, return ]
+[ boolean, true ]
+[ semi_colon, ; ]
+[ right_bracket, } ]
+[ reserved_word, static ]
+[ reserved_word, int ]
+[ id, gcd ]
+[ left_parenthesis, ( ]
+[ reserved_word, int ]
+[ id, a ]
+[ comma, , ]
+[ reserved_word, int ]
+[ id, b ]
+[ right_parenthesis, ) ]
+[ left_bracket, { ]
+[ reserved_word, String ]
+[ id, s ]
+[ Atrib_Op, = ]
+[ ERROR, Valor de String Inválido ]
+[ reserved_word, int ]
+[ id, m ]
+[ semi_colon, ; ]
+[ reserved_word, int ]
+[ ERROR, Valor inválido: ? ]
+[ num, 23 ]
+[ id, sd ]
+[ semi_colon, ; ]
+[ id, m ]
+[ Atrib_Op, = ]
+[ id, b ]
+[ Arith_Op, % ]
+[ id, a ]
+[ semi_colon, ; ]
+[ reserved_word, if ]
+[ left_parenthesis, ( ]
+[ id, m ]
+[ Equal_Op, == ]
+[ num, 0 ]
+[ right_parenthesis, ) ]
+[ reserved_word, return ]
+[ id, a ]
+[ semi_colon, ; ]
+[ reserved_word, else ]
+[ reserved_word, return ]
+[ id, gcd ]
+[ left_parenthesis, ( ]
+[ id, m ]
+[ comma, , ]
+[ id, a ]
+[ right_parenthesis, ) ]
+[ semi_colon, ; ]
+[ right_bracket, } ]
+[ reserved_word, static ]
+[ reserved_word, int ]
+[ id, fibonacci ]
+[ left_parenthesis, ( ]
+[ reserved_word, int ]
+[ id, n ]
+[ right_parenthesis, ) ]
+[ left_bracket, { ]
+[ reserved_word, if ]
+[ left_parenthesis, ( ]
+[ left_parenthesis, ( ]
+[ id, n ]
+[ Equal_Op, == ]
+[ num, 1 ]
+[ right_parenthesis, ) ]
+[ Equal_OP, || ]
+[ left_parenthesis, ( ]
+[ id, n ]
+[ Equal_Op, == ]
+[ num, 2 ]
+[ right_parenthesis, ) ]
+[ right_parenthesis, ) ]
+[ reserved_word, return ]
+[ num, 1 ]
+[ semi_colon, ; ]
+[ reserved_word, else ]
+[ reserved_word, return ]
+[ id, fibonacci ]
+[ left_parenthesis, ( ]
+[ id, n ]
+[ Arith_Op, - ]
+[ num, 1 ]
+[ right_parenthesis, ) ]
+[ Arith_Op, + ]
+[ id, fibonacci ]
+[ left_parenthesis, ( ]
+[ id, n ]
+[ Arith_Op, - ]
+[ num, 2 ]
+[ right_parenthesis, ) ]
+[ semi_colon, ; ]
+[ right_bracket, } ]
+[ reserved_word, static ]
+[ reserved_word, float ]
+[ id, average ]
+[ left_parenthesis, ( ]
+[ reserved_word, int ]
+[ id, n1 ]
+[ comma, , ]
+[ reserved_word, int ]
+[ id, n2 ]
+[ comma, , ]
+[ reserved_word, int ]
+[ id, n3 ]
+[ right_parenthesis, ) ]
+[ left_bracket, { ]
+[ reserved_word, float ]
+[ id, sum ]
+[ Atrib_Op, = ]
+[ id, n1 ]
+[ Arith_Op, + ]
+[ id, n2 ]
+[ Arith_Op, + ]
+[ id, n3 ]
+[ semi_colon, ; ]
+[ reserved_word, return ]
+[ id, sum ]
+[ Arith_Op, / ]
+[ num, 3.0 ]
+[ semi_colon, ; ]
+[ right_bracket, } ]
+[ right_bracket, } ]

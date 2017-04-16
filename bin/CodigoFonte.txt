@@ -43,6 +43,3 @@ class Algebra {
 		return sum / 3.0;
 	}
 }
-
-Even though it is illegal to  write anything here
-the lexical analyzer should work normally without errors
