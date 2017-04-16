@@ -19,6 +19,6 @@ public class Token {
 
 	// Retorna o token em String
 	public String toString() {
-		return token + "\t" + lexeme;
+		return "[ " + token+ ", " + lexeme + " ]";
 	}
 }

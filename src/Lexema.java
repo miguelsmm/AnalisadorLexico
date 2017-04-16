@@ -40,7 +40,7 @@ public class Lexema {
 	}
 
 	// verifica se o caractere é uma letra
-	public boolean isAlpha(char c) {
+	public boolean isALetter(char c) {
 		if (c >= 'a' && c <= 'z')
 			return true;
 		if (c >= 'A' && c <= 'Z')
@@ -52,10 +52,10 @@ public class Lexema {
 
 	public Token nextToken() {
 
-		int state = 1; // Initial state
-		int numBuffer = 0; // A buffer for number literals
-		String alphaBuffer = "";
-		int decBuffer = 0;
+		int state = 1; // Estado inicial
+		int numBuffer = 0; // Buffer para numeros literais
+		String letterBuffer = ""; // Buffer para letras
+		int decBuffer = 0; // buffer para numeros decimais
 		boolean skipped = false;
 		while (true) {
 			if (current == EOF && !skipped) {
@@ -74,10 +74,10 @@ public class Lexema {
 			}
 
 			switch (state) {
-			// Controle do código fonte
+			// Classificação em seus respectivos tokens
 			case 1:
 				switch (current) {
-				case ' ': // Tira os espaços em branco e comentários
+				case ' ': // Tira os espaços em branco e formatações
 				case '\n':
 				case '\b':
 				case '\f':
@@ -88,46 +88,56 @@ public class Lexema {
 
 				case ';':
 					current = read();
-					return new Token("SM", ";");
+					return new Token("semi_colon", ";");
 
 				case '+':
 					current = read();
-					return new Token("PO", "+");
+					return new Token("Arith_Op", "+");
 
 				case '-':
 					current = read();
-					return new Token("MO", "-");
+					return new Token("Arith_Op", "-");
 
 				case '*':
 					current = read();
-					return new Token("TO", "*");
+					return new Token("Arith_Op", "*");
 
 				case '/':
 					current = read();
 					state = 14;
 					continue;
-				// return new Token("DO", "/");
+
 				case ',':
 					current = read();
-					return new Token("FA", ",");
+					return new Token("comma", ",");
 				case '(':
 					current = read();
-					return new Token("LP", "(");
+					return new Token("left_parenthesis", "(");
 				case ')':
 					current = read();
-					return new Token("RP", ")");
+					return new Token("right_parenthesis", ")");
 				case '{':
 					current = read();
-					return new Token("LB", "{");
+					return new Token("left_bracket", "{");
 				case '}':
 					current = read();
-					return new Token("RB", "}");
+					return new Token("right_bracket", "}");
 				case '%':
 					current = read();
-					return new Token("MD", "%");
+					return new Token("Arith_Op", "%");
 				case '=':
 					current = read();
 					state = 8;
+					continue;
+
+				case '<':
+					current = read();
+					state = 18;
+					continue;
+
+				case '>':
+					current = read();
+					state = 19;
 					continue;
 
 				case '!':
@@ -145,18 +155,18 @@ public class Lexema {
 				case '"':
 					current = read();
 					state = 13;
-					alphaBuffer = "";
+					letterBuffer = "";
 					continue;
 
 				default:
-					state = 2; // Check the next possibility
+					state = 2; // Verifica a próxima possibilidade
 					continue;
 				}
 
-				// Integer - Start
+				// Numeros
 			case 2:
 				if (isNumeric(current)) {
-					numBuffer = 0; // Reset the buffer.
+					numBuffer = 0; // Reseta o Buffer;
 					numBuffer += (current - '0');
 
 					state = 3;
@@ -164,12 +174,12 @@ public class Lexema {
 					current = read();
 
 				} else {
-					state = 5; // does not start with number or symbol go to
-								// case 5
+					state = 5; // se não começa com número ou símbolo, pula para
+								// o case 5;
 				}
 				continue;
 
-			// Integer - Body
+			// Verifica se é um número inteiro
 			case 3:
 				if (isNumeric(current)) {
 					numBuffer *= 10;
@@ -181,15 +191,15 @@ public class Lexema {
 
 					current = read();
 
-					state = 4; // has decimal point go to case 4
+					state = 4; // Se é número decimal, é tratado no case 4;
 
 				} else {
-					return new Token("NUM", "" + numBuffer);
+					return new Token("num", "" + numBuffer);
 				}
 
 				continue;
 
-			// decimal-start
+			// decimal
 			case 4:
 				if (isNumeric(current)) {
 					decBuffer = 0;
@@ -198,10 +208,10 @@ public class Lexema {
 					current = read();
 
 				} else {
-					return new Token("ERROR", "Invalid input: " + numBuffer + ".");
+					return new Token("ERROR", "Valor inválido: " + numBuffer + ".");
 				}
 				continue;
-			// decimal body
+			// Verifica se é numero decimal
 			case 7:
 				if (isNumeric(current)) {
 					decBuffer *= 10;
@@ -209,45 +219,48 @@ public class Lexema {
 
 					current = read();
 				} else {
-					return new Token("NM", "" + numBuffer + "." + decBuffer);
+					return new Token("num", "" + numBuffer + "." + decBuffer);
 				}
 				continue;
 
-			// identifier -start
+			// Verifica o buffer de letras, verificando se é valido
 			case 5:
-				if (isAlpha(current) || current == '_') {
-					alphaBuffer = "";
-					alphaBuffer += current;
+				if (isALetter(current) || current == '_') {
+					letterBuffer = "";
+					letterBuffer += current;
 					state = 6;
 					current = read();
 				} else {
-					alphaBuffer = "";
-					alphaBuffer += current;
+					letterBuffer = "";
+					letterBuffer += current;
 					current = read();
-					return new Token("ERROR", "Invalid input:" + alphaBuffer);
+					return new Token("ERROR", "Valor inválido: " + letterBuffer);
 				}
 				continue;
 
-			// identifier - Body
+			// Identifica se é uma palavra reservada ou id;
 			case 6:
-				if ((isAlpha(current) || isNumeric(current) || current == '_')) {
+				if ((isALetter(current) || isNumeric(current) || current == '_')) {
 
-					alphaBuffer += current;
+					letterBuffer += current;
 					current = read();
 
 				} else {
 
-					if (alphaBuffer.equals("class") || alphaBuffer.equals("static") || alphaBuffer.equals("else")
-							|| alphaBuffer.equals("if") || alphaBuffer.equals("int") || alphaBuffer.equals("float")
-							|| alphaBuffer.equals("boolean") || alphaBuffer.equals("String")
-							|| alphaBuffer.equals("return") || alphaBuffer.equals("while")) {
-						return new Token("[reserved_word]", "" + alphaBuffer);
+					if (letterBuffer.equals("class") || letterBuffer.equals("static") || letterBuffer.equals("else")
+							|| letterBuffer.equals("if") || letterBuffer.equals("int") || letterBuffer.equals("float")
+							|| letterBuffer.equals("boolean") || letterBuffer.equals("String")
+							|| letterBuffer.equals("public") || letterBuffer.equals("return")
+							|| letterBuffer.equals("while") || letterBuffer.equals("for") || letterBuffer.equals("do")
+							|| letterBuffer.equals("printf") || letterBuffer.equals("null")
+							|| letterBuffer.equals("double") || letterBuffer.equals("private")) {
+						return new Token("reserved_word", "" + letterBuffer);
 
-					} else if (alphaBuffer.equals("true") || alphaBuffer.equals("false")) {
-						return new Token("[boolean]", "" + alphaBuffer);
+					} else if (letterBuffer.equals("true") || letterBuffer.equals("false")) {
+						return new Token("boolean", "" + letterBuffer);
 					}
 
-					return new Token("[id]", "" + alphaBuffer);
+					return new Token("id", "" + letterBuffer);
 				}
 				continue;
 
@@ -255,16 +268,16 @@ public class Lexema {
 			case 8:
 				if (current == '=') {
 					current = read();
-					return new Token("EQ", "==");
+					return new Token("Equal_Op", "==");
 				} else {
 
-					return new Token("AO", "=");
+					return new Token("Atrib_Op", "=");
 				}
 				// if !=
 			case 9:
 				if (current == '=') {
 					current = read();
-					return new Token("NE", "!=");
+					return new Token("Equal_OP", "!=");
 				} else {
 					return new Token("ERROR", "Invalid input: !");
 				}
@@ -273,33 +286,31 @@ public class Lexema {
 			case 10:
 				if (current == '&') {
 					current = read();
-					return new Token("LA", "&&");
+					return new Token("Equal_OP", "&&");
 				} else {
-					return new Token("ERROR", "Invalid input: &");
+					return new Token("ERROR", "Valor inválido: &");
 				}
 				// if ||
 			case 11:
 				if (current == '|') {
 					current = read();
-					return new Token("LO", "||");
+					return new Token("Equal_OP", "||");
 				} else {
-					return new Token("ERROR", "Invalid input: |");
+					return new Token("ERROR", "Valor inválido: |");
 				}
 
 			case 13:
 				if (current == '"') {
 					current = read();
-					return new Token("ST", "\"" + alphaBuffer + "\"");
+					return new Token("string_literal", "\"" + letterBuffer + "\"");
 				} else if (current == '\n' || current == EOF) {
 					current = read();
-					return new Token("ERROR", "Invalid string literal");
+					return new Token("ERROR", "Valor de String Inválido");
 				} else {
-					alphaBuffer += current;
+					letterBuffer += current;
 					current = read();
 				}
 				continue;
-			// alphaBuffer += curr;
-			// curr = read();
 
 			case 14:
 				if (current == '/') {
@@ -309,7 +320,7 @@ public class Lexema {
 					state = 16;
 					current = read();
 				} else {
-					return new Token("DO", "/");
+					return new Token("Arith_Op", "/");
 				}
 				continue;
 			case 15:
@@ -335,7 +346,22 @@ public class Lexema {
 					state = 16;
 				}
 				continue;
-
+			// if < || <=
+			case 18:
+				if (current == '=') {
+					current = read();
+					return new Token("Relational_Op", "<=");
+				} else {
+					return new Token("Relational_Op", "<");
+				}
+				// if > || >=
+			case 19:
+				if (current == '=') {
+					current = read();
+					return new Token("Relational_Op", ">=");
+				} else {
+					return new Token("Relational_Op", ">");
+				}
 			}
 		}
 	}
